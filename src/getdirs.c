@@ -23,8 +23,8 @@ void readDirs(char *path, int padding, FileList *list) {
     }
     if (entry->d_type == DT_DIR) {
       if (strcmp(entry->d_name, "..") && strcmp(entry->d_name, ".") &&
-          strcmp(entry->d_name, ".git")) {
-        char full_path[128] = "";
+          strcmp(entry->d_name, ".git") && strcmp(entry->d_name, ".local")) {
+        char full_path[1024] = "";
         appendChar(full_path, path, sizeof(full_path));
 
         appendChar(full_path, "/", sizeof(full_path));
@@ -35,4 +35,5 @@ void readDirs(char *path, int padding, FileList *list) {
       }
     }
   }
+  closedir(dir);
 }

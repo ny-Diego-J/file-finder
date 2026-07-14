@@ -1,10 +1,13 @@
 #include "FileItem.h"
 #include "filter.h"
 #include <ncurses.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 void drawui(FileList *list) {
   char text[1024] = "";
+  int selectet_item = 0;
 
   // 1. Initialize ncurses and set up the virtual screen
   initscr();
@@ -41,22 +44,39 @@ void drawui(FileList *list) {
 
   int pos = 0;
   int rem = 0;
+
+  start_color();
+  use_default_colors();
+  init_pair(1, COLOR_GREEN, COLOR_BLACK);
+
   while (1) {
     werase(file_win);
 
-    int j = 0;
+    int filter_count = 0;
+    pthread_mutex_lock(&list->lock);
     for (int i = 0; i < list->count; i++) {
       if (does_search_match(text, list->items[i])) {
-        mvwprintw(file_win, j, 0, "%s", list->items[i].name);
-        j++;
+        if (selectet_item == filter_count) {
+          wattron(file_win, COLOR_PAIR(1));
+        }
+        mvwprintw(file_win, filter_count, 0, "%s", list->items[i].name);
+        if (selectet_item == filter_count) {
+          wattroff(file_win, COLOR_PAIR(1));
+        }
+        filter_count++;
       }
     }
+    pthread_mutex_unlock(&list->lock);
+    if (selectet_item > filter_count) {
+      selectet_item = filter_count - 1;
+    }
+
     wrefresh(file_win);
 
-    char c = wgetch(input_win);
+    int c = wgetch(input_win);
     if (c != ERR) {
       switch (c) {
-      case 7:
+      case KEY_BACKSPACE:
         if (pos == 0) {
         } else {
 
@@ -65,13 +85,37 @@ void drawui(FileList *list) {
         }
         break;
       case 10:
-        printf("%s\n", text);
-        // TODO: to go file
+        pthread_mutex_lock(&list->lock);
+        FileItem file;
+        int j = 0;
+        for (int i = 0; i < list->count; i++) {
+          if (does_search_match(text, list->items[i])) {
+            if (selectet_item == j++) {
+              file = list->items[i];
+              break;
+            }
+          }
+        }
+        pthread_mutex_unlock(&list->lock);
         endwin();
+        printf("%s\n", file.path);
+        exit(0);
         return;
         break;
+      case KEY_UP:
+        if (selectet_item > 0) {
+          --selectet_item;
+        }
+        break;
+      case KEY_DOWN:
+        if (selectet_item < filter_count - 1) {
+          ++selectet_item;
+        } else {
+          selectet_item = filter_count - 1;
+        }
+        break;
       default:
-        text[pos++] = c;
+        text[pos++] = (char)c;
       }
       char display_buffer[1026];
       strcpy(display_buffer, "> ");
