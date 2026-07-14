@@ -1,6 +1,6 @@
 #include "FileItem.h"
 #include "input.h"
-int main(int argc, char *argv[]) {
+int main() {
   FileList list;
   create_List(&list);
   multithread(&list);

@@ -4,7 +4,7 @@
 #define FILE_ITEM
 typedef struct {
   char name[265];
-  char path[1024];
+  char path[2048];
 } FileItem;
 
 typedef struct {

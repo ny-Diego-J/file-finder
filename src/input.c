@@ -2,6 +2,7 @@
 #include "ui.h"
 #include <dirent.h>
 #include <fcntl.h>
+#include <linux/limits.h>
 #include <pthread.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -25,7 +26,9 @@ void appendChar(char *dest, char *src, size_t dest_capacity) {
 }
 
 void *startRead(void *args) {
-  readDirs(".", 0, args);
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  readDirs(cwd, 0, args);
   return NULL;
 }
 void *startui(void *args) {
