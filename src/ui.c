@@ -1,4 +1,5 @@
 #include "FileItem.h"
+#include "filter.h"
 #include <ncurses.h>
 #include <stdio.h>
 #include <string.h>
@@ -43,8 +44,12 @@ void drawui(FileList *list) {
   while (1) {
     werase(file_win);
 
+    int j = 0;
     for (int i = 0; i < list->count; i++) {
-      mvwprintw(file_win, i, 0, "%s", list->items[i].name);
+      if (does_search_match(text, list->items[i])) {
+        mvwprintw(file_win, j, 0, "%s", list->items[i].name);
+        j++;
+      }
     }
     wrefresh(file_win);
 
