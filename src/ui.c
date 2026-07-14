@@ -1,11 +1,9 @@
-#include "FileItem.h"
+#include "file_item.h"
 #include "filter.h"
 #include <ncurses.h>
-#include <pthread.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-void drawui(FileList *list) {
+void drawui(file_list *list) {
   char text[1024] = "";
   int selectet_item = 0;
 
@@ -86,7 +84,7 @@ void drawui(FileList *list) {
         break;
       case 10:
         pthread_mutex_lock(&list->lock);
-        FileItem file;
+        file_item file;
         int j = 0;
         for (int i = 0; i < list->count; i++) {
           if (does_search_match(text, list->items[i])) {

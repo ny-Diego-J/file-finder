@@ -1,7 +1,7 @@
 #include "FileItem.h"
 #include "input.h"
 int main() {
-  FileList list;
+  file_list list;
   create_List(&list);
   multithread(&list);
   return 0;

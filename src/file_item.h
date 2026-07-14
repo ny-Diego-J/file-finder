@@ -5,17 +5,17 @@
 typedef struct {
   char name[265];
   char path[2048];
-} FileItem;
+} file_item;
 
 typedef struct {
-  FileItem *items;
+  file_item *items;
   int count;
   int capacity;
   pthread_mutex_t lock;
-} FileList;
+} file_list;
 
-void create_List(FileList *list);
+void create_List(file_list *list);
 
-void add_file(FileList *list, const char *name, const char *path);
+void add_file(file_list *list, const char *name, const char *path);
 
 #endif // !FILE_ITEM

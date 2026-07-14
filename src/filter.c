@@ -1,6 +1,6 @@
-#include "FileItem.h"
+#include "file_item.h"
 #include <string.h>
-int does_search_match(char *input, FileItem file) {
+int does_search_match(char *input, file_item file) {
   int input_size = strlen(input);
   int file_size = strlen(file.name);
   int word_point = 0;
