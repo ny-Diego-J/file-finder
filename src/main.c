@@ -1,6 +1,10 @@
-#include <stdio.h>
+#include "input.h"
+#include <dirent.h>
+#include <fcntl.h>
+#include <stddef.h>
+#include <unistd.h>
 
-int main() {
-  printf("Hello world\n");
+int main(int argc, char *argv[]) {
+  multithread();
   return 0;
 }

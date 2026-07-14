@@ -2,7 +2,7 @@
 
 ## algorythem
 
-- fuzzy finder
+- fuzzy finding
 
 ## searching
 
@@ -33,3 +33,11 @@ on input:
 
 1. Filter every loadet file
 2. update to check for new found filees
+
+## TODOS
+
+- figure out datastructure for dirs and files
+- make first version to search
+- make search algorythems and filters
+- inplement score system
+- add good ui
