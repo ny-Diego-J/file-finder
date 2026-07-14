@@ -18,7 +18,7 @@ OBJS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRCS))
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+	$(CC) $(CFLAGS) -lncurses -o $(TARGET) $(OBJS)
 
 # Kompilieren: Erstellt die .o-Dateien im "obj"-Ordner aus den .c-Dateien
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)

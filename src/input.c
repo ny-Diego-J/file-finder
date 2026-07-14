@@ -1,4 +1,5 @@
 #include "getdirs.h"
+#include "ui.h"
 #include <dirent.h>
 #include <fcntl.h>
 #include <pthread.h>
@@ -24,15 +25,22 @@ void appendChar(char *dest, char *src, size_t dest_capacity) {
 }
 
 void *startRead(void *args) {
-  readDirs(".", 0);
+  readDirs(".", 0, args);
+  return NULL;
+}
+void *startui(void *args) {
+  drawui(args);
   return NULL;
 }
 
-void multithread() {
+void multithread(FileList *list) {
 
-  pthread_t thread;
-  pthread_create(&thread, NULL, startRead, NULL);
-  pthread_join(thread, NULL);
+  pthread_t searchthread;
+  pthread_t uithread;
+  pthread_create(&searchthread, NULL, startRead, list);
+  pthread_create(&uithread, NULL, startui, list);
+  pthread_join(searchthread, NULL);
+  pthread_join(uithread, NULL);
 
   printf("Main thread finished.\n");
 }

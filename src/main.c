@@ -1,10 +1,8 @@
+#include "FileItem.h"
 #include "input.h"
-#include <dirent.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <unistd.h>
-
 int main(int argc, char *argv[]) {
-  multithread();
+  FileList list;
+  create_List(&list);
+  multithread(&list);
   return 0;
 }

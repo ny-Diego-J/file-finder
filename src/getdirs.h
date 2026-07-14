@@ -1,4 +1,5 @@
+#include "FileItem.h"
 #ifndef GETDIRS
-
-void readDirs(char path[64], int padding);
+#define GETDIRS
+void readDirs(char path[64], int padding, FileList *list);
 #endif // GETDIRS
