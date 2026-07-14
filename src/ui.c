@@ -25,13 +25,8 @@ void drawui(file_list *list) {
   WINDOW *file_win =
       newwin(file_height, file_width, file_start_y, file_start_x);
 
-  // 2. Enable raw mode: catch keys instantly without waiting for Enter
   cbreak();
-
-  // 3. Stop the terminal from automatically printing the keys you type
   noecho();
-
-  // 4. Enable support for Arrow keys, F-keys, etc.
   nodelay(input_win, TRUE);
   keypad(input_win, TRUE);
 
@@ -118,7 +113,7 @@ void drawui(file_list *list) {
       char display_buffer[1026];
       strcpy(display_buffer, "> ");
       strcat(display_buffer, text);
-      mvwprintw(input_win, 0, 0, display_buffer);
+      mvwprintw(input_win, 0, 0, "%s", display_buffer);
       wrefresh(input_win);
       if (rem) {
         wclrtoeol(input_win);

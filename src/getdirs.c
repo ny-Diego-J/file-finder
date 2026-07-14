@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void readDirs(char *path, int padding, file_list *list) {
+void read_dirs(char *path, int padding, file_list *list) {
   DIR *dir = opendir(path);
   if (dir == NULL) {
     perror("unable to open dir");
@@ -20,11 +20,11 @@ void readDirs(char *path, int padding, file_list *list) {
     if (entry->d_type == DT_DIR) {
       if (!strstr(entry->d_name, ".")) {
         char full_path[1024] = "";
-        appendChar(full_path, path, sizeof(full_path));
+        append_char(full_path, path, sizeof(full_path));
 
-        appendChar(full_path, "/", sizeof(full_path));
-        appendChar(full_path, entry->d_name, sizeof(full_path));
-        readDirs(full_path, padding + 2, list);
+        append_char(full_path, "/", sizeof(full_path));
+        append_char(full_path, entry->d_name, sizeof(full_path));
+        read_dirs(full_path, padding + 2, list);
       }
     }
   }

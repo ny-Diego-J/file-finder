@@ -1,3 +1,4 @@
+#include "file_item.h"
 #include "getdirs.h"
 #include "ui.h"
 #include <dirent.h>
@@ -9,12 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-char *getInput(char input[64]) {
-  scanf("%63[^\n]", input);
-  return input;
-}
-
-void appendChar(char *dest, char *src, size_t dest_capacity) {
+void append_char(char *dest, char *src, size_t dest_capacity) {
 
   size_t dest_len = strlen(dest);
 
@@ -25,23 +21,23 @@ void appendChar(char *dest, char *src, size_t dest_capacity) {
   strncat(dest, src, remaining_space);
 }
 
-void *startRead(void *args) {
+void *start_read(void *args) {
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
-  readDirs(cwd, 0, args);
+  read_dirs(cwd, 0, args);
   return NULL;
 }
-void *startui(void *args) {
+void *star_tui(void *args) {
   drawui(args);
   return NULL;
 }
 
-void multithread(FileList *list) {
+void multithread(file_list *list) {
 
   pthread_t searchthread;
   pthread_t uithread;
-  pthread_create(&searchthread, NULL, startRead, list);
-  pthread_create(&uithread, NULL, startui, list);
+  pthread_create(&searchthread, NULL, start_read, list);
+  pthread_create(&uithread, NULL, star_tui, list);
   pthread_join(searchthread, NULL);
   pthread_join(uithread, NULL);
 

@@ -16,10 +16,10 @@ void add_file(file_list *list, const char *name, const char *path) {
         realloc(list->items, (list->capacity * 2) * sizeof(file_item));
     list->capacity = list->capacity * 2;
   }
-  file_item newItem;
-  strcpy(newItem.name, name);
-  strcpy(newItem.path, path);
-  list->items[list->count] = newItem;
+  file_item new_item;
+  strcpy(new_item.name, name);
+  strcpy(new_item.path, path);
+  list->items[list->count] = new_item;
   list->count = list->count + 1;
   pthread_mutex_unlock(&list->lock);
 }
