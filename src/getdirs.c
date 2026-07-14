@@ -18,8 +18,7 @@ void readDirs(char *path, int padding, file_list *list) {
       add_file(list, entry->d_name, path);
     }
     if (entry->d_type == DT_DIR) {
-      if (strcmp(entry->d_name, "..") && strcmp(entry->d_name, ".") &&
-          strcmp(entry->d_name, ".git") && strcmp(entry->d_name, ".local")) {
+      if (!strstr(entry->d_name, ".")) {
         char full_path[1024] = "";
         appendChar(full_path, path, sizeof(full_path));
 

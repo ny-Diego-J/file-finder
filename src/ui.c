@@ -96,7 +96,7 @@ void drawui(file_list *list) {
         }
         pthread_mutex_unlock(&list->lock);
         endwin();
-        printf("%s\n", file.path);
+        printf("%s/%s\n", file.path, file.name);
         exit(0);
         return;
         break;
