@@ -1,6 +1,9 @@
+#include "dir_queue.h"
+#include "file_item.h"
 #include "getdirs.h"
 #include "ui.h"
 #include <dirent.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -16,25 +19,44 @@ void append_char(char *dest, char *src, size_t dest_capacity) {
   strncat(dest, src, remaining_space);
 }
 
-void *start_read(void *args) {
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
-  read_dirs(cwd, 0, args);
-  return NULL;
-}
+// void *start_read(void *args) {
+//   char cwd[PATH_MAX];
+//   getcwd(cwd, sizeof(cwd));
+//   read_dirs(cwd, args);
+//   return NULL;
+// }
 void *star_tui(void *args) {
   drawui(args);
   return NULL;
 }
 
-void multithread(file_list *list) {
+/*
+ * make multiple thread.
+ * First thread takes every directory and adds it to the queue
+ * the others wait and as soon they get one available folder the tkae it and
+ */
+void multithread(file_list *list, int amount) {
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
 
-  pthread_t searchthread;
+  dir_queue queue;
+  init_queue(&queue, list);
+
+  pthread_t search_threads[amount];
+
   pthread_t uithread;
-  pthread_create(&searchthread, NULL, start_read, list);
+  enqueue(&queue, cwd);
+
+  for (int i = 0; i < amount; i++) {
+    pthread_create(&search_threads[i], NULL, search_worker, &queue);
+  }
+
   pthread_create(&uithread, NULL, star_tui, list);
-  pthread_join(searchthread, NULL);
+
+  for (int i = 0; i < amount; i++) {
+    pthread_join(search_threads[i], NULL);
+  }
   pthread_join(uithread, NULL);
 
-  printf("Main thread finished.\n");
+  destroy_queue(&queue);
 }
