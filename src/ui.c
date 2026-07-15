@@ -60,18 +60,16 @@ void drawui(file_list *list) {
 
     int filter_count = 0;
     for (int i = 0; i < sorted_list.count; i++) {
-      if (does_search_match(text, sorted_list.items[i])) {
-        if (selectet_item == filter_count) {
-          wattron(file_win, COLOR_PAIR(1));
-        }
-        mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i].name);
-        if (selectet_item == filter_count) {
-          wattroff(file_win, COLOR_PAIR(1));
-        }
-        filter_count++;
+      if (selectet_item == filter_count) {
+        wattron(file_win, COLOR_PAIR(1));
       }
+      mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i].name);
+      if (selectet_item == filter_count) {
+        wattroff(file_win, COLOR_PAIR(1));
+      }
+      filter_count++;
     }
-    pthread_mutex_unlock(&list->lock);
+
     if (selectet_item > filter_count) {
       selectet_item = filter_count - 1;
     }
@@ -98,11 +96,9 @@ void drawui(file_list *list) {
         file_item file;
         int j = 0;
         for (int i = 0; i < sorted_list.count; i++) {
-          if (does_search_match(text, sorted_list.items[i])) {
-            if (selectet_item == j++) {
-              file = list->items[i];
-              break;
-            }
+          if (selectet_item == j++) {
+            file = sorted_list.items[i];
+            break;
           }
         }
         endwin();
@@ -123,8 +119,10 @@ void drawui(file_list *list) {
         }
         break;
       default:
-        if (c >= 32 && c <= 126)
+        if (c >= 32 && c <= 126) {
           text[pos++] = (char)c;
+          text[pos] = '\0';
+        }
       }
       char display_buffer[1026];
       strcpy(display_buffer, "> ");
