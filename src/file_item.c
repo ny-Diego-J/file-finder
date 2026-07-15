@@ -24,6 +24,20 @@ void add_file(file_list *list, const char *name, const char *path) {
   pthread_mutex_unlock(&list->lock);
 }
 
+void add_file_to_list(file_list *list, file_item file) {
+
+  pthread_mutex_lock(&list->lock);
+  if (list->count >= list->capacity) {
+    list->items =
+        realloc(list->items, (list->capacity * 2) * sizeof(file_item));
+    list->capacity = list->capacity * 2;
+  }
+  file_item new_item = file;
+  list->items[list->count] = new_item;
+  list->count = list->count + 1;
+  pthread_mutex_unlock(&list->lock);
+}
+
 void clear_list(file_list *list) {
   list->count = 0;
   list->capacity = 8;

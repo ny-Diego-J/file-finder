@@ -21,9 +21,17 @@ void drawui(file_list *list) {
   int file_start_y = 0;
   int file_start_x = 0;
   int file_width = COLS;
-  int file_height = LINES - 2;
+  int file_height = LINES - 4;
   WINDOW *file_win =
       newwin(file_height, file_width, file_start_y, file_start_x);
+
+  int info_height = 2;
+  int info_width = COLS;
+  int info_start_y = input_start_y - info_height;
+  int info_start_x = 0;
+
+  WINDOW *info_win =
+      newwin(info_height, info_width, info_start_y, info_start_x);
 
   cbreak();
   noecho();
@@ -34,7 +42,9 @@ void drawui(file_list *list) {
   mvwprintw(input_win, 0, 0, "> ");
 
   wrefresh(file_win);
+  wrefresh(info_win);
   wrefresh(input_win);
+  werase(info_win);
 
   int pos = 0;
   int rem = 0;
@@ -46,14 +56,15 @@ void drawui(file_list *list) {
   while (1) {
     werase(file_win);
 
+    file_list sorted_list = get_matching_list(text, list);
+
     int filter_count = 0;
-    pthread_mutex_lock(&list->lock);
-    for (int i = 0; i < list->count; i++) {
-      if (does_search_match(text, list->items[i])) {
+    for (int i = 0; i < sorted_list.count; i++) {
+      if (does_search_match(text, sorted_list.items[i])) {
         if (selectet_item == filter_count) {
           wattron(file_win, COLOR_PAIR(1));
         }
-        mvwprintw(file_win, filter_count, 0, "%s", list->items[i].name);
+        mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i].name);
         if (selectet_item == filter_count) {
           wattroff(file_win, COLOR_PAIR(1));
         }
@@ -64,6 +75,11 @@ void drawui(file_list *list) {
     if (selectet_item > filter_count) {
       selectet_item = filter_count - 1;
     }
+
+    wattron(info_win, COLOR_PAIR(1));
+    mvwprintw(info_win, 0, 0, "Files:   %d/%d", filter_count, list->count);
+    wattroff(info_win, COLOR_PAIR(1));
+    wrefresh(info_win);
 
     wrefresh(file_win);
 
@@ -79,18 +95,16 @@ void drawui(file_list *list) {
         }
         break;
       case 10:
-        pthread_mutex_lock(&list->lock);
         file_item file;
         int j = 0;
-        for (int i = 0; i < list->count; i++) {
-          if (does_search_match(text, list->items[i])) {
+        for (int i = 0; i < sorted_list.count; i++) {
+          if (does_search_match(text, sorted_list.items[i])) {
             if (selectet_item == j++) {
               file = list->items[i];
               break;
             }
           }
         }
-        pthread_mutex_unlock(&list->lock);
         endwin();
         printf("%s/%s\n", file.path, file.name);
         exit(0);
@@ -109,7 +123,8 @@ void drawui(file_list *list) {
         }
         break;
       default:
-        text[pos++] = (char)c;
+        if (c >= 32 && c <= 126)
+          text[pos++] = (char)c;
       }
       char display_buffer[1026];
       strcpy(display_buffer, "> ");
