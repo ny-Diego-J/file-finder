@@ -16,11 +16,11 @@
 search key: setup
 
 - exact matches at the top > "setup"
-- less mathing lower int the ranking > "s_e_t_up"
-- the more the letter the next are to eachother the higher the score
-- matching casing like for "bf" to "bar_foo" has higher score than "barfoo"
+- less matching = lower in the ranking > "s_e_t_up"
+- the more of the letters are next to eachother = higher score
+- matching casing like for "bf" to "bar_foo" has higher score than just "barfoo" because of the casing
 - small bonus for first character matching
-- if two things are tied then the shorter one wins
+- if two things are tied then the shorter one wins for simplicity
 
 ## Programm process
 

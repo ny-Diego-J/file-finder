@@ -1,5 +1,7 @@
 #include "file_item.h"
+#include <ctype.h>
 #include <string.h>
+
 int does_search_match(char *input, file_item file) {
   int input_size = strlen(input);
   int file_size = strlen(file.name);
@@ -7,7 +9,7 @@ int does_search_match(char *input, file_item file) {
   int match_char = 0;
   for (int i = 0; i < input_size; i++) {
     for (int j = word_point; j < file_size; j++) {
-      if (input[i] == file.name[j]) {
+      if (tolower(input[i]) == tolower(file.name[j])) {
         match_char = 1;
         word_point = j + 1;
         break;

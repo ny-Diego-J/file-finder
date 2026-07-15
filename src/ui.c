@@ -29,6 +29,7 @@ void drawui(file_list *list) {
   noecho();
   nodelay(input_win, TRUE);
   keypad(input_win, TRUE);
+  curs_set(0);
 
   mvwprintw(input_win, 0, 0, "> ");
 
