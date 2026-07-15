@@ -1,13 +1,21 @@
 #include "file_item.h"
 #include "input.h"
 #include <dirent.h>
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 
 void read_dirs(char *path, int padding, file_list *list) {
+
   DIR *dir = opendir(path);
   if (dir == NULL) {
-    perror("unable to open dir");
+    if (errno == EACCES) {
+      // fprintf(stderr, "Permission denied: Cannot access directory
+      // '%s'\n",path);
+    } else {
+      // Handles other errors like ENOENT (Directory does not exist)
+      // fprintf(stderr, "Error opening '%s': %s\n", path, strerror(errno));
+    }
     return;
   }
 

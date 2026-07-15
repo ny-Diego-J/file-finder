@@ -56,24 +56,27 @@ void drawui(file_list *list) {
   while (1) {
     werase(file_win);
 
-    file_list sorted_list = get_matching_list(text, list);
+    filtered_file_list sorted_list = get_matching_list(text, list);
 
     int filter_count = 0;
+    pthread_mutex_lock(&list->lock);
     for (int i = 0; i < sorted_list.count; i++) {
       if (selectet_item == filter_count) {
         wattron(file_win, COLOR_PAIR(1));
       }
-      mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i].name);
+      mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i]->name);
       if (selectet_item == filter_count) {
         wattroff(file_win, COLOR_PAIR(1));
       }
       filter_count++;
     }
+    pthread_mutex_unlock(&list->lock);
 
     if (selectet_item > filter_count) {
       selectet_item = filter_count - 1;
     }
 
+    werase(info_win);
     wattron(info_win, COLOR_PAIR(1));
     mvwprintw(info_win, 0, 0, "Files:   %d/%d", filter_count, list->count);
     wattroff(info_win, COLOR_PAIR(1));
@@ -93,16 +96,16 @@ void drawui(file_list *list) {
         }
         break;
       case 10:
-        file_item file;
-        int j = 0;
         for (int i = 0; i < sorted_list.count; i++) {
-          if (selectet_item == j++) {
-            file = sorted_list.items[i];
+          if (selectet_item == i) {
+            endwin();
+            printf("%s/%s\n", sorted_list.items[i]->path,
+                   sorted_list.items[i]->name);
+            exit(0);
             break;
           }
         }
         endwin();
-        printf("%s/%s\n", file.path, file.name);
         exit(0);
         return;
         break;
