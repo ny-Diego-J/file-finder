@@ -26,19 +26,21 @@ void read_dirs(char *path, dir_queue *queue) {
       add_file(queue->list, entry->d_name, path);
     }
     if (entry->d_type == DT_DIR) {
-      // if (!strstr(entry->d_name, ".")) {
-      char full_path[1024] = "";
+      if (strcmp(entry->d_name, ".") != 0 &&
+          strcmp(entry->d_name, ".cache") != 0 &&
+          strcmp(entry->d_name, "..") != 0) {
+        char full_path[1024] = "";
 
-      append_char(full_path, path, sizeof(full_path));
+        append_char(full_path, path, sizeof(full_path));
 
-      if (strcmp(path, "/")) {
-        append_char(full_path, "/", sizeof(full_path));
+        if (strcmp(path, "/")) {
+          append_char(full_path, "/", sizeof(full_path));
+        }
+
+        append_char(full_path, entry->d_name, sizeof(full_path));
+
+        enqueue(queue, full_path);
       }
-
-      append_char(full_path, entry->d_name, sizeof(full_path));
-
-      enqueue(queue, full_path);
-      //}
     }
   }
   closedir(dir);

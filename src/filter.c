@@ -6,6 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * Compares the two variables and returns the right number for the qsort
+ * function
+ *
+ * @param a first variable
+ * @param b second variable
+ * @return An integer of 1, 0 or -1
+ */
 int compare_function(const void *a, const void *b) {
   const file_item *item_a = *(const file_item **)a;
   const file_item *item_b = *(const file_item **)b;

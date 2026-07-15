@@ -12,23 +12,23 @@ void drawui(file_list *list) {
 
   int input_height = 2;
   int input_width = COLS;
-  int input_start_y = LINES - input_height;
   int input_start_x = 0;
+  int input_start_y = LINES - input_height;
 
   WINDOW *input_win =
       newwin(input_height, input_width, input_start_y, input_start_x);
 
-  int file_start_y = 0;
-  int file_start_x = 0;
-  int file_width = COLS;
   int file_height = LINES - 4;
+  int file_width = COLS;
+  int file_start_x = 0;
+  int file_start_y = 0;
   WINDOW *file_win =
       newwin(file_height, file_width, file_start_y, file_start_x);
 
   int info_height = 2;
   int info_width = COLS;
-  int info_start_y = input_start_y - info_height;
   int info_start_x = 0;
+  int info_start_y = input_start_y - info_height;
 
   WINDOW *info_win =
       newwin(info_height, info_width, info_start_y, info_start_x);
