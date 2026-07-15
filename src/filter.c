@@ -1,18 +1,19 @@
 #include "file_item.h"
 #include <ctype.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
 int compare_function(const void *a, const void *b) {
-  const file_item *itemA = (const file_item *)a;
-  const file_item *itemB = (const file_item *)b;
-  if (itemA->score > itemB->score) {
+  const file_item *item_a = (const file_item *)a;
+  const file_item *item_b = (const file_item *)b;
+  if (item_a->score > item_b->score) {
     return -1; // itemA.higher ranked?
-  } else if (itemB->score > itemA->score) {
+  } else if (item_b->score > item_a->score) {
     return 1;
   } else {
-    if (strlen(itemA->name) < strlen(itemB->name)) {
+    if (strlen(item_a->name) < strlen(item_b->name)) {
       return -1;
     } else {
       return 1;
@@ -27,7 +28,7 @@ int get_score(char *input, file_item file) {
   int input_size = strlen(input);
   int file_size = strlen(file.name);
   int word_point = 0;
-  int match_char = 0;
+  bool match_char = false;
   double MAX_CHAR_SCORE = 100.0 / input_size;
   double CASE_PENALTY = 1;
   double SPACE_PENALTY = 1;
@@ -38,30 +39,21 @@ int get_score(char *input, file_item file) {
       if (tolower(input[i]) == tolower(file.name[j])) {
         // does case match?
         if (input[i] == file.name[j]) {
-          // is the position right?
-          if (j == word_point) {
-            score += MAX_CHAR_SCORE;
-          } else {
-            score += MAX_CHAR_SCORE - (SPACE_PENALTY * j - word_point);
-          }
+          // if the position is the same it wil be SPACE_PENALTY * 0
+          score += MAX_CHAR_SCORE - (SPACE_PENALTY * j - word_point);
         } else {
-          // is the position right?
-          if (j == word_point) {
-            score += MAX_CHAR_SCORE - CASE_PENALTY;
-          } else {
-            score += MAX_CHAR_SCORE - CASE_PENALTY -
-                     (SPACE_PENALTY * j - word_point);
-          }
+          score +=
+              MAX_CHAR_SCORE - CASE_PENALTY - (SPACE_PENALTY * j - word_point);
         }
-        match_char = 1;
+        match_char = true;
         word_point = j + 1;
         break;
       }
     }
-    if (match_char == 0) {
+    if (!match_char) {
       return -1;
     }
-    match_char = 0;
+    match_char = false;
   }
   return score;
 }

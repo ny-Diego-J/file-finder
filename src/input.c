@@ -1,4 +1,3 @@
-#include "file_item.h"
 #include "getdirs.h"
 #include "ui.h"
 #include <dirent.h>
