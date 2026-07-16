@@ -1,6 +1,5 @@
 #include "file_item.h"
 #include "filter.h"
-#include <math.h>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +7,6 @@ void drawui(file_list *list) {
   char text[1024] = "";
   int selectet_item = 0;
 
-  // 1. Initialize ncurses and set up the virtual screen
   initscr();
 
   int input_height = 2;
@@ -69,13 +67,16 @@ void drawui(file_list *list) {
       if (file_height == filter_count) {
         break;
       }
+
       if (selectet_item - offset == filter_count) {
         wattron(file_win, COLOR_PAIR(1));
       }
+
       mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i]->name);
       if (selectet_item - offset == filter_count) {
         wattroff(file_win, COLOR_PAIR(1));
       }
+
       filter_count++;
     }
 
@@ -83,6 +84,7 @@ void drawui(file_list *list) {
     for (int i = 0; i < sorted_list.count; i++) {
       filter_amount++;
     }
+
     pthread_mutex_unlock(&list->lock);
 
     if (selectet_item > filter_amount) {
@@ -108,6 +110,7 @@ void drawui(file_list *list) {
           text[--pos] = '\0';
           rem = 1;
         }
+
         break;
         // enter
       case 10:
@@ -120,6 +123,7 @@ void drawui(file_list *list) {
             break;
           }
         }
+
         endwin();
         exit(0);
         return;
@@ -149,11 +153,15 @@ void drawui(file_list *list) {
           text[pos] = '\0';
         }
       }
+
       char display_buffer[1026];
+
       strcpy(display_buffer, "> ");
       strcat(display_buffer, text);
+
       mvwprintw(input_win, 0, 0, "%s", display_buffer);
       wrefresh(input_win);
+
       if (rem) {
         wclrtoeol(input_win);
         rem = 0;

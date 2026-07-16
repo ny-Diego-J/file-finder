@@ -41,7 +41,7 @@ int compare_function(const void *a, const void *b) {
 /**
  * returns the matching score of the name
  * retruns -1 if it doenst match
- * */
+ */
 int get_score(char *input, file_item file) {
   int input_size = strlen(input);
   int file_size = strlen(file.name);

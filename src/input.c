@@ -12,30 +12,22 @@ void append_char(char *dest, char *src, size_t dest_capacity) {
 
   size_t dest_len = strlen(dest);
 
-  // We subtract dest_len and 1 (for the null terminator '\0')
   size_t remaining_space = dest_capacity - dest_len - 1;
 
-  // 3. Safe append
   strncat(dest, src, remaining_space);
 }
 
-// void *start_read(void *args) {
-//   char cwd[PATH_MAX];
-//   getcwd(cwd, sizeof(cwd));
-//   read_dirs(cwd, args);
-//   return NULL;
-// }
 void *star_tui(void *args) {
   drawui(args);
   return NULL;
 }
 
 /*
- * make multiple thread.
+ * make multiple threads.
  * First thread takes every directory and adds it to the queue
  * the others wait and as soon they get one available folder the tkae it and
  */
-void multithread(file_list *list, int amount) {
+void init_threads(file_list *list, int amount) {
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
 

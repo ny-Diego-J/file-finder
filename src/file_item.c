@@ -6,8 +6,10 @@ void create_List(file_list *list) {
   list->count = 0;
   list->capacity = 8;
   list->items = malloc(list->capacity * sizeof(file_item));
+
   pthread_mutex_init(&list->lock, NULL);
 }
+
 void create_filtered_List(filtered_file_list *list) {
   list->count = 0;
   list->capacity = 8;
@@ -37,7 +39,7 @@ void add_file_to_filtered_list(filtered_file_list *list, file_item *file) {
     list->capacity = list->capacity * 2;
     list->items = realloc(list->items, list->capacity * sizeof(file_item *));
   }
-  // Speichert einfach die Adresse des echten Elements ab. Kein Kopieren!
+
   list->items[list->count] = file;
   list->count = list->count + 1;
 }
@@ -48,6 +50,7 @@ void clear_list(file_list *list) {
     free(list->items[i].name);
     free(list->items[i].path);
   }
+
   free(list->items);
   list->items = NULL;
   list->count = 0;

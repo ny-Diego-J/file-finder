@@ -2,20 +2,12 @@
 #include "file_item.h"
 #include "input.h"
 #include <dirent.h>
-#include <errno.h>
 #include <string.h>
 
 void read_dirs(char *path, dir_queue *queue) {
 
   DIR *dir = opendir(path);
   if (dir == NULL) {
-    if (errno == EACCES) {
-      // fprintf(stderr, "Permission denied: Cannot access directory
-      // '%s'\n",path);
-    } else {
-      // Handles other errors like ENOENT (Directory does not exist)
-      // fprintf(stderr, "Error opening '%s': %s\n", path, strerror(errno));
-    }
     return;
   }
 
@@ -25,6 +17,7 @@ void read_dirs(char *path, dir_queue *queue) {
     if (entry->d_type == DT_REG) {
       add_file(queue->list, entry->d_name, path);
     }
+
     if (entry->d_type == DT_DIR) {
       if (strcmp(entry->d_name, ".") != 0 &&
           strcmp(entry->d_name, ".cache") != 0 &&

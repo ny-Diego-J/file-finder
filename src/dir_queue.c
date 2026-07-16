@@ -13,9 +13,11 @@ void init_queue(dir_queue *queue, file_list *list) {
   queue->active_threads = 0;
   queue->list = list;
   queue->paths = malloc(queue->capacity * sizeof(char *));
+
   pthread_mutex_init(&queue->lock, NULL);
   pthread_cond_init(&queue->cond, NULL);
 }
+
 // add to queue
 void enqueue(dir_queue *queue, char *path) {
   pthread_mutex_lock(&queue->lock);

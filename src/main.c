@@ -8,8 +8,9 @@ int main(int argc, char *argv[]) {
   } else {
     num = 1024;
   }
+
   file_list list;
   create_List(&list);
-  multithread(&list, num);
+  init_threads(&list, num);
   return 0;
 }
