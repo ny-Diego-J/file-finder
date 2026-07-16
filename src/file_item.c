@@ -1,4 +1,5 @@
 #include "file_item.h"
+#include "input.h"
 #include <stdlib.h>
 #include <string.h>
 

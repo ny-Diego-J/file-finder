@@ -26,5 +26,4 @@ void create_filtered_List(filtered_file_list *list);
 
 void add_file(file_list *list, const char *name, const char *path);
 void add_file_to_filtered_list(filtered_file_list *list, file_item *file);
-
 #endif // !FILE_ITEM

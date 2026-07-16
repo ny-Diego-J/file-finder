@@ -34,7 +34,8 @@ void drawui(file_list *list) {
 
   cbreak();
   noecho();
-  nodelay(input_win, TRUE);
+  // nodelay(input_win, TRUE);
+  wtimeout(input_win, 50);
   keypad(input_win, TRUE);
   curs_set(0);
 
@@ -166,6 +167,9 @@ void drawui(file_list *list) {
         wclrtoeol(input_win);
         rem = 0;
       }
+    }
+    if (sorted_list.items != NULL) {
+      free(sorted_list.items);
     }
   }
 
