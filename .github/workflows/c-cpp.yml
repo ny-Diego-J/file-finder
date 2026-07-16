@@ -1,0 +1,29 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Install Build Essentials
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+
+    - name: Compile Code with makefile
+      run: make
+    - name: Upload Executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: fyf
+        path: ./exec  # <- Hier den exakten Namen/Pfad deines Executables eintragen
