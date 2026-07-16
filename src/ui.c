@@ -65,9 +65,10 @@ void drawui(file_list *list) {
     filter_count = 0;
     pthread_mutex_lock(&list->lock);
 
-    offset = fmax(selectet_item - file_height + 1, 0);
-
     for (int i = offset; i < sorted_list.count; i++) {
+      if (file_height == filter_count) {
+        break;
+      }
       if (selectet_item - offset == filter_count) {
         wattron(file_win, COLOR_PAIR(1));
       }
@@ -79,13 +80,14 @@ void drawui(file_list *list) {
     }
 
     filter_amount = 0;
-    for (int i = offset; i < sorted_list.count; i++) {
+    for (int i = 0; i < sorted_list.count; i++) {
       filter_amount++;
     }
     pthread_mutex_unlock(&list->lock);
 
-    if (selectet_item > filter_count) {
-      selectet_item = filter_count - 1;
+    if (selectet_item > filter_amount) {
+      selectet_item = filter_amount - 1;
+      offset = 0;
     }
 
     werase(info_win);
@@ -107,6 +109,7 @@ void drawui(file_list *list) {
           rem = 1;
         }
         break;
+        // enter
       case 10:
         for (int i = 0; i < sorted_list.count; i++) {
           if (selectet_item == i) {
@@ -122,16 +125,23 @@ void drawui(file_list *list) {
         return;
         break;
       case KEY_UP:
-        if (selectet_item > 0) {
-          --selectet_item;
+        if (selectet_item == 0) {
+          break;
+        }
+        selectet_item--;
+        if (offset > 0 && offset > selectet_item) {
+          offset--;
         }
         break;
       case KEY_DOWN:
-        if (selectet_item < filter_count - 1) {
-          ++selectet_item;
-        } else {
-          selectet_item = filter_count - 1;
+        if (selectet_item == filter_amount - 1) {
+          break;
         }
+        selectet_item++;
+        if (file_height + offset < selectet_item + 1) {
+          offset++;
+        }
+
         break;
       default:
         if (c >= 32 && c <= 126) {
