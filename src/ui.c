@@ -1,5 +1,6 @@
 #include "file_item.h"
 #include "filter.h"
+#include <math.h>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,22 +54,33 @@ void drawui(file_list *list) {
   use_default_colors();
   init_pair(1, COLOR_GREEN, COLOR_BLACK);
 
+  int filter_count = 0;
+  int offset = 0;
+  int filter_amount = 0;
   while (1) {
     werase(file_win);
 
     filtered_file_list sorted_list = get_matching_list(text, list);
 
-    int filter_count = 0;
+    filter_count = 0;
     pthread_mutex_lock(&list->lock);
-    for (int i = 0; i < sorted_list.count; i++) {
-      if (selectet_item == filter_count) {
+
+    offset = fmax(selectet_item - file_height + 1, 0);
+
+    for (int i = offset; i < sorted_list.count; i++) {
+      if (selectet_item - offset == filter_count) {
         wattron(file_win, COLOR_PAIR(1));
       }
       mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i]->name);
-      if (selectet_item == filter_count) {
+      if (selectet_item - offset == filter_count) {
         wattroff(file_win, COLOR_PAIR(1));
       }
       filter_count++;
+    }
+
+    filter_amount = 0;
+    for (int i = offset; i < sorted_list.count; i++) {
+      filter_amount++;
     }
     pthread_mutex_unlock(&list->lock);
 
@@ -78,7 +90,7 @@ void drawui(file_list *list) {
 
     werase(info_win);
     wattron(info_win, COLOR_PAIR(1));
-    mvwprintw(info_win, 0, 0, "Files:   %d/%d", filter_count, list->count);
+    mvwprintw(info_win, 0, 0, "Files:   %d/%d", filter_amount, list->count);
     wattroff(info_win, COLOR_PAIR(1));
     wrefresh(info_win);
 
