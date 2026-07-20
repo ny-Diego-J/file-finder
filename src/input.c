@@ -38,12 +38,11 @@ void init_threads(file_list *list, int amount) {
 
   pthread_t uithread;
   enqueue(&queue, cwd);
+  pthread_create(&uithread, NULL, star_tui, list);
 
   for (int i = 0; i < amount; i++) {
     pthread_create(&search_threads[i], NULL, search_worker, &queue);
   }
-
-  pthread_create(&uithread, NULL, star_tui, list);
 
   for (int i = 0; i < amount; i++) {
     pthread_join(search_threads[i], NULL);

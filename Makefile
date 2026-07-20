@@ -21,11 +21,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
-# Ausführen
 run: all
 	./$(TARGET)
 
-# Aufräumen (löscht das Programm und den gesamten "obj"-Ordner)
 clean:
 	rm -rf $(OBJDIR) $(TARGET)
 

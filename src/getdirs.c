@@ -21,7 +21,8 @@ void read_dirs(char *path, dir_queue *queue) {
     if (entry->d_type == DT_DIR) {
       if (strcmp(entry->d_name, ".") != 0 &&
           strcmp(entry->d_name, ".cache") != 0 &&
-          strcmp(entry->d_name, "..") != 0) {
+          strcmp(entry->d_name, "..") != 0 &&
+          strcmp(entry->d_name, ".git") != 0) {
         char full_path[1024] = "";
 
         append_char(full_path, path, sizeof(full_path));
