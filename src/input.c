@@ -35,6 +35,13 @@ void init_threads(file_list *list, int amount, char *path, bool is_all,
   if (path == NULL) {
     getcwd(cwd, sizeof(cwd));
   } else {
+    if (path[0] == '/') {
+      strcpy(cwd, path);
+    } else {
+      getcwd(cwd, sizeof(cwd));
+      append_char(cwd, "/", sizeof(cwd));
+      append_char(cwd, path, sizeof(cwd));
+    }
     // TODO: implement for absolute and relatvie path
   }
 
