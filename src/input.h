@@ -10,6 +10,7 @@ typedef struct {
   char path[PATH_MAX];
 } ui_flags;
 
+int is_valid_directory(char *name);
 void init_threads(file_list *list, int amount, char *path, bool is_all,
                   bool is_relative_path);
 void append_char(char *dest, char *src, size_t dest_capacity);

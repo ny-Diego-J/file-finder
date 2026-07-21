@@ -9,6 +9,34 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+char ignore_paths[][10] = {".", "..", ".git", ".cache"};
+char ignore_minimum[][10] = {".", ".."};
+int length = sizeof(ignore_paths) / sizeof(ignore_paths[0]);
+
+bool search_all_files;
+
+/**
+ * @brief Checks if the directory should be ignored.
+ *
+ * @param name The directory name to compare to the ignore list.
+ * @return 1 if it matches the ignore list, 0 otherwise.
+ */
+int is_valid_directory(char *name) {
+  if (search_all_files) {
+    for (int i = 0; i < length; i++) {
+      if (!strcmp(name, ignore_minimum[i])) {
+        return 0;
+      }
+    }
+  } else {
+    for (int i = 0; i < length; i++) {
+      if (!strcmp(name, ignore_paths[i])) {
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
 
 void append_char(char *dest, char *src, size_t dest_capacity) {
 
@@ -31,6 +59,8 @@ void *start_tui(void *args) {
  */
 void init_threads(file_list *list, int amount, char *path, bool is_all,
                   bool is_relative_path) {
+  search_all_files = is_all;
+
   char cwd[PATH_MAX];
   if (path == NULL) {
     getcwd(cwd, sizeof(cwd));
@@ -42,7 +72,6 @@ void init_threads(file_list *list, int amount, char *path, bool is_all,
       append_char(cwd, "/", sizeof(cwd));
       append_char(cwd, path, sizeof(cwd));
     }
-    // TODO: implement for absolute and relatvie path
   }
 
   dir_queue queue;

@@ -2,24 +2,6 @@
 #include "input.h"
 #include <dirent.h>
 #include <string.h>
-#define MAX_LENGHT 20
-char ignore_paths[][MAX_LENGHT] = {".", "..", ".git", ".cache"};
-int length = sizeof(ignore_paths) / sizeof(ignore_paths[0]);
-
-/**
- * @brief Checks if the directory should be ignored.
- *
- * @param name The directory name to compare to the ignore list.
- * @return 1 if it matches the ignore list, 0 otherwise.
- */
-int is_valid_directory(char *name) {
-  for (int i = 0; i < length; i++) {
-    if (!strcmp(name, ignore_paths[i])) {
-      return 0;
-    }
-  }
-  return 1;
-}
 
 /**
  * reads the given directory. Adds the found files to the list and the directory
