@@ -21,15 +21,30 @@ void init_queue(dir_queue *queue, file_list *list) {
 // add to queue
 void enqueue(dir_queue *queue, char *path) {
   pthread_mutex_lock(&queue->lock);
+
   if (queue->count >= queue->capacity) {
-    pthread_mutex_unlock(&queue->lock);
-    return;
+    int new_capacity = queue->capacity * 2;
+    char **new_paths = malloc(new_capacity * sizeof(char *));
+
+    if (new_paths != NULL) {
+      for (int i = 0; i < queue->count; i++) {
+        new_paths[i] = queue->paths[(queue->head + i) % queue->capacity];
+      }
+      free(queue->paths);
+      queue->paths = new_paths;
+      queue->head = 0;
+      queue->tail = queue->count;
+      queue->capacity = new_capacity;
+    } else {
+      pthread_mutex_unlock(&queue->lock);
+      return;
+    }
   }
+
   queue->paths[queue->tail] = strdup(path);
-  queue->tail =
-      (queue->tail + 1) % queue->capacity; // goes back to the start if the end
-                                           // of the list is reached
+  queue->tail = (queue->tail + 1) % queue->capacity;
   queue->count += 1;
+
   pthread_cond_signal(&queue->cond);
   pthread_mutex_unlock(&queue->lock);
 }

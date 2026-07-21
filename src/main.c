@@ -49,6 +49,37 @@ int main(int argc, char *argv[]) {
         output = EDITOR;
       } else if (is_matching_flag(argv[i], 2, "-c", "--clipboard")) {
         output = CLIPBOARD;
+      } else if (is_matching_flag(argv[i], 2, "-h", "--help")) {
+        printf(
+            "Usage: fif [OPTIONS] [SEARCH_DIRECTORY]\n"
+            "\n"
+            "A fast, multithreaded file searching utility with an interactive "
+            "ncurses interface.\n"
+            "\n"
+            "DESCRIPTION:\n"
+            "    Searches the filesystem for the search querry.\n"
+            "\n"
+            "ARGUMENTS:\n"
+            "    [SEARCH_DIRECTORY]         Starting search directory.\n"
+            "                               Uses the current directory if no "
+            "other is given.\n"
+            "\n"
+            "OPTIONS:\n"
+            "    -h, --help                 Show this help message and exit.\n"
+            "    -a, --all                  Includes directories like .git or "
+            ".cache.\n"
+            "    -t, --threads [amount]     Set the amount of search threads.\n"
+            "    -r, --relative             Displays the realtive file path "
+            "instead of the absolute.\n"
+            "    -e, --editor               Opens the file in the $EDITOR.\n"
+            "    -c, --clipboard            Copys the path to the clipboard. "
+            "Needs xclip.\n"
+            "\n"
+            "\n"
+            "EXAMPLES:\n"
+            "    fyf dev\n"
+            "    fyf -a\n");
+        exit(0);
       } else {
         printf("%s is not a valid flag. Exiting\n", argv[i]);
         exit(1);
