@@ -35,8 +35,8 @@ on input:
 ## Further todos
 
 - better ui
-  - highlight matching
-  - toggle path to file
+  - Highlight matching - done
+  - toggle path to file - done
   - if window is wide enough make split view of selectet file
 - QOL (quality of live)
   - make shift enter to open file in $EDITOR
@@ -49,3 +49,11 @@ on input:
   - matches after _, - or camel/pascal case
   - file extension matching
   - consecuative character matching
+
+## flags
+
+-a /--all show all files (even ".git" and so)
+-t {} -- enter amount of threads
+--relative -- display the relative path
+{} path to start from
+TODO: maybe implement flag for output (in editor, clipboard, stdout)

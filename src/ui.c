@@ -1,10 +1,16 @@
 #include "file_item.h"
 #include "filter.h"
+#include "input.h"
+#include <linux/limits.h>
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-void drawui(file_list *list) {
+#include <unistd.h>
+void drawui(ui_flags *flags) {
+  file_list *list = flags->list;
+  bool is_relative_path = flags->is_relative_path;
+
   char text[1024] = "";
   int selectet_item = 0;
   bool toggle_path = false;
@@ -74,8 +80,25 @@ void drawui(file_list *list) {
       }
       int x_offset = 0;
       if (toggle_path) {
-        mvwprintw(file_win, filter_count, 0, "%s/", sorted_list.items[i]->path);
-        x_offset = strlen(sorted_list.items[i]->path) + 1;
+        if (is_relative_path) {
+          char *relative_path =
+              sorted_list.items[i]->path + strlen(flags->path);
+
+          if (relative_path[0] == '/') {
+            relative_path++;
+          }
+          if (strcmp(relative_path, "")) {
+            mvwprintw(file_win, filter_count, 0, "%s/", relative_path);
+            x_offset = strlen(relative_path) + 1;
+          } else {
+            mvwprintw(file_win, filter_count, 0, "%s", relative_path);
+            x_offset = strlen(relative_path);
+          }
+        } else {
+          mvwprintw(file_win, filter_count, 0, "%s/",
+                    sorted_list.items[i]->path);
+          x_offset = strlen(sorted_list.items[i]->path) + 1;
+        }
       }
 
       print_highlighted(file_win, selectet_item - offset == filter_count,
