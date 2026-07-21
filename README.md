@@ -1,4 +1,5 @@
 # fuzzy File finder
+[![wakatime](https://wakatime.com/badge/user/a5e23dff-7bc5-43ed-8866-74c17b3691df/project/4a3479fe-dc07-4d35-bb4b-3d9eef39695f.svg)](https://wakatime.com/badge/user/a5e23dff-7bc5-43ed-8866-74c17b3691df/project/4a3479fe-dc07-4d35-bb4b-3d9eef39695f)
 
 ## algorythem
 
