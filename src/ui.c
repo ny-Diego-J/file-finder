@@ -1,11 +1,13 @@
 #include "file_item.h"
 #include "filter.h"
 #include <ncurses.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 void drawui(file_list *list) {
   char text[1024] = "";
   int selectet_item = 0;
+  bool toggle_path = false;
 
   initscr();
 
@@ -52,6 +54,8 @@ void drawui(file_list *list) {
   start_color();
   use_default_colors();
   init_pair(1, COLOR_GREEN, COLOR_BLACK);
+  init_pair(2, COLOR_BLUE, -1);
+  init_pair(3, COLOR_WHITE, COLOR_BLACK);
 
   int filter_count = 0;
   int offset = 0;
@@ -68,15 +72,15 @@ void drawui(file_list *list) {
       if (file_height == filter_count) {
         break;
       }
-
-      if (selectet_item - offset == filter_count) {
-        wattron(file_win, COLOR_PAIR(1));
+      int x_offset = 0;
+      if (toggle_path) {
+        mvwprintw(file_win, filter_count, 0, "%s/", sorted_list.items[i]->path);
+        x_offset = strlen(sorted_list.items[i]->path) + 1;
       }
 
-      mvwprintw(file_win, filter_count, 0, "%s", sorted_list.items[i]->name);
-      if (selectet_item - offset == filter_count) {
-        wattroff(file_win, COLOR_PAIR(1));
-      }
+      print_highlighted(file_win, selectet_item - offset == filter_count,
+                        sorted_list.items[i]->name, filter_count, text,
+                        x_offset);
 
       filter_count++;
     }
@@ -104,6 +108,9 @@ void drawui(file_list *list) {
     int c = wgetch(input_win);
     if (c != ERR) {
       switch (c) {
+      case 9:
+        toggle_path = !toggle_path;
+        break;
       case KEY_BACKSPACE:
         if (pos == 0) {
         } else {

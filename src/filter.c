@@ -1,10 +1,47 @@
 #include "file_item.h"
 #include <ctype.h>
 #include <math.h>
+#include <ncurses.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+/**
+ * prints the formattet word
+ */
+void print_highlighted(WINDOW *window, bool is_selected, char *name,
+                       int filter_count, char *text, int x_offset) {
+  int name_size = strlen(name);
+  int text_size = strlen(text);
+  int word_point = 0;
+
+  for (int i = 0; i < name_size; i++) {
+    bool is_match = false;
+
+    if (word_point < text_size &&
+        tolower(name[i]) == tolower(text[word_point])) {
+      is_match = true;
+      word_point++;
+    }
+
+    if (is_selected) {
+      if (is_match) {
+        wattron(window, COLOR_PAIR(3));
+      } else {
+        wattron(window, COLOR_PAIR(1));
+      }
+    } else {
+      if (is_match) {
+        wattron(window, COLOR_PAIR(2));
+      }
+    }
+
+    mvwprintw(window, filter_count, i + x_offset, "%c", name[i]);
+
+    wattroff(window, COLOR_PAIR(1) | COLOR_PAIR(2) | COLOR_PAIR(3));
+  }
+}
 
 /**
  * Compares the two variables and returns the right number for the qsort
@@ -49,12 +86,16 @@ int get_score(char *input, file_item file) {
   bool match_char = false;
   double MAX_CHAR_SCORE = 100.0 / input_size;
   double CASE_PENALTY = 1;
-  double SPACE_PENALTY = 1;
+  double SPACE_PENALTY = 5;
+  double FIRST_LETTER_BONUS = 5;
   double score = 0;
   for (int i = 0; i < input_size; i++) {
     for (int j = word_point; j < file_size; j++) {
       // check for general match
       if (tolower(input[i]) == tolower(file.name[j])) {
+        if (i == 0 && j == 0) {
+          score += FIRST_LETTER_BONUS;
+        }
         score += MAX_CHAR_SCORE - (SPACE_PENALTY * (j - word_point));
         score -= input[i] == file.name[j] ? 0 : CASE_PENALTY;
         match_char = true;

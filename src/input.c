@@ -22,7 +22,7 @@ void *star_tui(void *args) {
   return NULL;
 }
 
-/*
+/**
  * make multiple threads.
  * First thread takes every directory and adds it to the queue
  * the others wait and as soon they get one available folder the tkae it and

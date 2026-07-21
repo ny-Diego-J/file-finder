@@ -31,3 +31,21 @@ on input:
 
 1. Filter every loadet file
 2. update to check for new found filees
+
+## Further todos
+
+- better ui
+  - highlight matching
+  - toggle path to file
+  - if window is wide enough make split view of selectet file
+- QOL (quality of live)
+  - make shift enter to open file in $EDITOR
+  - copy path to clipboard
+  - flags to toggle settings
+    - threads
+    - absolute/relative starting path
+    - all files (.git, .cache, ...)
+- improve scoring system
+  - matches after _, - or camel/pascal case
+  - file extension matching
+  - consecuative character matching
