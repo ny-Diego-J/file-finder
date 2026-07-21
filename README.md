@@ -9,7 +9,7 @@
 1. Finding
 
 - subsequent matching
-- search key has to be in order but not next to eachother
+- search key has to be in order but not next to each other
 
 1. Ranking
 
@@ -17,7 +17,7 @@ search key: setup
 
 - exact matches at the top > "setup"
 - less matching = lower in the ranking > "s_e_t_up"
-- the more of the letters are next to eachother = higher score
+- the more of the letters are next to each other = higher score
 - if two things are tied then the shorter one wins for simplicity
 
 ## Programm process
@@ -25,12 +25,12 @@ search key: setup
 on Start:
 
 1. first thread scans for files and index the paths to memory
-2. secons thread renders ui (optional)
+2. second thread renders UI (optional)
 
 on input:
 
-1. Filter every loadet file
-2. update to check for new found filees
+1. Filter every loaded file
+2. update to check for new found files
 
 ## Further todos
 
