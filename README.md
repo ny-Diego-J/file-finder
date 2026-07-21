@@ -36,15 +36,15 @@ on input:
 
 - better ui
   - Highlight matching - done
-  - toggle path to file - done
+  - toggle path to file
   - if window is wide enough make split view of selectet file
 - QOL (quality of live)
   - make shift enter to open file in $EDITOR
   - copy path to clipboard
-  - flags to toggle settings
-    - threads
-    - absolute/relative starting path
-    - all files (.git, .cache, ...)
+  - flags to toggle settings - done
+    - threads - done
+    - absolute/relative starting path - done
+    - all files (.git, .cache, ...) - done
 - improve scoring system
   - matches after _, - or camel/pascal case
   - file extension matching

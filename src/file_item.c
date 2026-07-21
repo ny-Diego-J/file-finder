@@ -1,5 +1,6 @@
 #include "file_item.h"
 #include "input.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -58,4 +59,24 @@ void clear_list(file_list *list) {
   list->capacity = 0;
   pthread_mutex_unlock(&list->lock);
   pthread_mutex_destroy(&list->lock);
+}
+
+char *get_full_path(file_item *file) {
+  size_t path_len = strlen(file->path);
+  int needs_slash = (path_len > 0 && file->path[path_len - 1] != '/');
+
+  size_t total_length =
+      path_len + (needs_slash ? 1 : 0) + strlen(file->name) + 1;
+
+  char *full_path = malloc(total_length);
+  if (full_path == NULL) {
+    return NULL; // Return NULL if memory allocation failed
+  }
+  if (needs_slash) {
+    snprintf(full_path, total_length, "%s/%s", file->path, file->name);
+  } else {
+    snprintf(full_path, total_length, "%s%s", file->path, file->name);
+  }
+
+  return full_path;
 }

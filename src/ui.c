@@ -4,9 +4,24 @@
 #include <linux/limits.h>
 #include <ncurses.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
+int copyToClipboardLinux(const char *text) {
+  FILE *pipe = popen("xclip -selection clipboard", "w");
+  if (!pipe) {
+    perror("popen failed");
+    return 0;
+  }
+
+  fputs(text, pipe);
+
+  int status = pclose(pipe);
+  return status == 0;
+}
+
 void drawui(ui_flags *flags) {
   file_list *list = flags->list;
   bool is_relative_path = flags->is_relative_path;
@@ -146,10 +161,42 @@ void drawui(ui_flags *flags) {
         // enter
       case 10:
         for (int i = 0; i < sorted_list.count; i++) {
+          char *full_path = get_full_path(sorted_list.items[i]);
           if (selectet_item == i) {
             endwin();
-            printf("%s/%s\n", sorted_list.items[i]->path,
-                   sorted_list.items[i]->name);
+            switch (flags->output) {
+            case STDOUT:
+              printf("%s\n", full_path);
+              break;
+            case EDITOR:
+              char *editor = getenv("EDITOR");
+
+              if (editor == NULL || editor[0] == '\0') {
+                editor = "nvim";
+              }
+              pid_t pid = fork();
+
+              if (pid < 0) {
+                perror("fork failed");
+                break;
+              }
+
+              if (pid == 0) {
+                char *args[] = {(char *)editor, (char *)full_path, NULL};
+
+                execvp(editor, args);
+
+                perror("execvp failed");
+                exit(EXIT_FAILURE);
+              } else {
+                int status;
+                waitpid(pid, &status, 0);
+              }
+              break;
+            case CLIPBOARD:
+              copyToClipboardLinux(full_path);
+              break;
+            }
             exit(0);
             break;
           }

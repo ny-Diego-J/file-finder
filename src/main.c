@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
   num = sysconf(_SC_NPROCESSORS_ONLN) * 2;
   bool is_all = false;
   bool is_relative_path = false;
+  enum output output = STDOUT;
   char *path = NULL;
 
   for (int i = 1; i < argc; i++) {
@@ -44,6 +45,13 @@ int main(int argc, char *argv[]) {
         }
       } else if (is_matching_flag(argv[i], 2, "-r", "--relative")) {
         is_relative_path = true;
+      } else if (is_matching_flag(argv[i], 2, "-e", "--editor")) {
+        output = EDITOR;
+      } else if (is_matching_flag(argv[i], 2, "-c", "--clipboard")) {
+        output = CLIPBOARD;
+      } else {
+        printf("%s is not a valid flag. Exiting\n", argv[i]);
+        exit(1);
       }
     } else {
       path = argv[i];
@@ -52,6 +60,6 @@ int main(int argc, char *argv[]) {
 
   file_list list;
   create_List(&list);
-  init_threads(&list, num, path, is_all, is_relative_path);
+  init_threads(&list, num, path, is_all, is_relative_path, output);
   return 0;
 }

@@ -58,7 +58,7 @@ void *start_tui(void *args) {
  * the others wait and as soon they get one available folder the tkae it and
  */
 void init_threads(file_list *list, int amount, char *path, bool is_all,
-                  bool is_relative_path) {
+                  bool is_relative_path, enum output output) {
   search_all_files = is_all;
 
   char cwd[PATH_MAX];
@@ -85,6 +85,7 @@ void init_threads(file_list *list, int amount, char *path, bool is_all,
   ui_flags flags;
   flags.is_relative_path = is_relative_path;
   flags.list = list;
+  flags.output = output;
   strcpy(flags.path, cwd);
 
   pthread_create(&uithread, NULL, start_tui, &flags);

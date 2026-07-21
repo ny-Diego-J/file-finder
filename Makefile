@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g -Iinclude
 
-TARGET = exec
+TARGET = fyf
 
 SRCDIR = src
 OBJDIR = obj
