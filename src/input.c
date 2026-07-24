@@ -100,4 +100,5 @@ void init_threads(file_list *list, int amount, char *path, bool is_all,
   pthread_join(uithread, NULL);
 
   destroy_queue(&queue);
+  clear_list(list);
 }
