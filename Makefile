@@ -28,3 +28,6 @@ clean:
 	rm -rf $(OBJDIR) $(TARGET)
 
 .PHONY: all run clean
+
+release: all
+	strip --strip-unneeded $(TARGET)
