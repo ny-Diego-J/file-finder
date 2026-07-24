@@ -6,7 +6,7 @@
 #include <string.h>
 
 void init_queue(dir_queue *queue, file_list *list) {
-  queue->capacity = 50000;
+  queue->capacity = 1024;
   queue->count = 0;
   queue->head = 0;
   queue->tail = 0;

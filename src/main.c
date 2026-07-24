@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
             "    fyf -a\n");
         exit(0);
       } else {
-        printf("%s is not a valid flag. Exiting\n", argv[i]);
+        printf("%s is not a valid flag!\n", argv[i]);
         exit(1);
       }
     } else {

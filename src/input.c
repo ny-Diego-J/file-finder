@@ -53,7 +53,7 @@ void *start_tui(void *args) {
 }
 
 /**
- * make multiple threads.
+ * Makes multiple threads.
  * First thread takes every directory and adds it to the queue
  * the others wait and as soon they get one available folder the tkae it and
  */
