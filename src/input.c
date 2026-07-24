@@ -9,9 +9,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-char ignore_paths[][10] = {".", "..", ".git", ".cache"};
+char ignore_paths[][10] = {".", "..", ".git", ".cache", ".local", ".cargo"};
 char ignore_minimum[][10] = {".", ".."};
 int length = sizeof(ignore_paths) / sizeof(ignore_paths[0]);
+int minimum_lenght = sizeof(ignore_minimum) / sizeof(ignore_minimum[0]);
 
 bool search_all_files;
 
@@ -23,7 +24,7 @@ bool search_all_files;
  */
 int is_valid_directory(char *name) {
   if (search_all_files) {
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < minimum_lenght; i++) {
       if (!strcmp(name, ignore_minimum[i])) {
         return 0;
       }
